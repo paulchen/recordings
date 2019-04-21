@@ -1,14 +1,14 @@
 #!/bin/bash
 
-BASE_DIR=/mnt/backup-home2/download/mediathek
-
 cd "`dirname $0`"
 HOME=`pwd`
 
-IDS=`echo 'SELECT id FROM recording WHERE NOW() BETWEEN start_date AND end_date;'|mysql --silent -u recordings -precordings recordings`
+. config
+
+IDS=`echo 'SELECT id FROM recording WHERE NOW() BETWEEN start_date AND end_date;'|mysql --silent -u recordings -p$DB_PASSWORD recordings`
 
 for ID in $IDS; do
-	DATA=`echo "SELECT station, DATE_FORMAT(start_date, '%Y-%m-%d-%H:%i:%s'), UNIX_TIMESTAMP(end_date) FROM recording WHERE id=$ID"|mysql --silent -u recordings -precordings recordings`
+	DATA=`echo "SELECT station, DATE_FORMAT(start_date, '%Y-%m-%d-%H:%i:%s'), UNIX_TIMESTAMP(end_date) FROM recording WHERE id=$ID"|mysql --silent -u recordings -p$DB_PASSWORD recordings`
 
 	read -r -a array <<< "$DATA"
 	STATION=${array[0]}
