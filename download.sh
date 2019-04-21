@@ -143,6 +143,8 @@ while [ "`date +%s`" -lt "$END" ]; do
 	no_sleep=$((END-sleep_time))
 	if [ "`date +%s`" -gt "$no_sleep" ]; then
 		echo "End time reached" >> $LOGFILE
+		echo "Done" >> $LOGFILE
+
 		break
 	fi
 
@@ -150,8 +152,4 @@ while [ "`date +%s`" -lt "$END" ]; do
 done
 
 ) 200> /tmp/recording_$1.lock
-
-rm -f /tmp/recording_$1.lock
-
-echo "Done" >> $LOGFILE
 
