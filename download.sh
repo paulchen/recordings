@@ -51,8 +51,12 @@ case "$1" in
 		;;
 esac
 
+LOCKFILE="/tmp/recording_$1.lock"
+
 (
 flock -xn 200 || exit
+
+echo $LOCKFILE
 
 LOGFILE=download.log
 
@@ -145,11 +149,13 @@ while [ "`date +%s`" -lt "$END" ]; do
 		echo "End time reached" >> $LOGFILE
 		echo "Done" >> $LOGFILE
 
+		rm -f "$LOCKFILE"
+
 		break
 	fi
 
 	sleep $sleep_time
 done
 
-) 200> /tmp/recording_$1.lock
+) 200> $LOCKFILE
 
