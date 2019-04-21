@@ -10,6 +10,8 @@ if [ "$2" == "" ]; then
 	exit 1
 fi
 
+SIMPLE=0
+SEGMENT_TIME=6
 case "$1" in
 	daserste)
 		MAIN_PLAYLIST_URL='https://mcdn.daserste.de/daserste/de/master.m3u8'
@@ -35,6 +37,13 @@ case "$1" in
 		INDEX_PREFIX='segment'
 		;;
 
+	orf2)
+		MAIN_PLAYLIST_URL='https://orf2.cdn.ors.at/out/u/orf2/qxb/manifest_6.m3u8?m=1552488594'
+		INDEX_PREFIX='manifest_6_'
+		SIMPLE=1
+		SEGMENT_TIME=5
+		;;
+
 	*)
 		# TODO extend by more stations
 		echo "Unknown station $1"
@@ -53,14 +62,18 @@ END=$((END+500))
 echo `date` Current end time: $END >> $LOGFILE
 while [ "`date +%s`" -lt "$END" ]; do
 	start_time=`date +%s`
-	MAIN_PLAYLIST=`wget "$MAIN_PLAYLIST_URL" -q -O -|grep -A 1 "$RESOLUTION"|head -n 2|tail -n 1`
 
-	if [ `echo "$MAIN_PLAYLIST" | grep -c '^http'` -eq "0" ]; then
-		TEMP=`echo "$MAIN_PLAYLIST_URL"|sed -e 's/\?.*$//;s/\/[^/]*$//'`
-		MAIN_PLAYLIST="$TEMP/$MAIN_PLAYLIST"
+	if [ "$SIMPLE" == "0" ]; then
+		MAIN_PLAYLIST=`wget "$MAIN_PLAYLIST_URL" -q -O -|grep -A 1 "$RESOLUTION"|head -n 2|tail -n 1`
+
+		if [ `echo "$MAIN_PLAYLIST" | grep -c '^http'` -eq "0" ]; then
+			TEMP=`echo "$MAIN_PLAYLIST_URL"|sed -e 's/\?.*$//;s/\/[^/]*$//'`
+			MAIN_PLAYLIST="$TEMP/$MAIN_PLAYLIST"
+		fi
+	else
+		MAIN_PLAYLIST="$MAIN_PLAYLIST_URL"
 	fi
 #	echo $MAIN_PLAYLIST
-
 	URLS=`wget "$MAIN_PLAYLIST" -q -O -|grep '\.ts'`
 
 	first=1
@@ -80,7 +93,7 @@ while [ "`date +%s`" -lt "$END" ]; do
 		segments=$((segments+1))
 	done
 
-	total_seconds=$((6*segments))
+	total_seconds=$((SEGMENT_TIME*segments))
 	echo `date` Last index: "$INDEX" >> $LOGFILE
 	echo `date` Total number of segments: "$segments" >> $LOGFILE
 	echo `date` Time span covered: "$total_seconds" >> $LOGFILE
