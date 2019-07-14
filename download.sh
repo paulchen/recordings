@@ -51,6 +51,13 @@ case "$1" in
 		SEGMENT_TIME=5
 		;;
 
+	orf3)
+		MAIN_PLAYLIST_URL='https://orf3.cdn.ors.at/out/u/orf3/qxb/manifest_6.m3u8?m=1552488594'
+		INDEX_PREFIX='manifest_6_'
+		SIMPLE=1
+		SEGMENT_TIME=5
+		;;
+
 	*)
 		# TODO extend by more stations
 		echo "Unknown station $1"
