@@ -37,6 +37,13 @@ case "$1" in
 		INDEX_PREFIX='segment'
 		;;
 
+	orf1)
+		MAIN_PLAYLIST_URL='https://orf1.cdn.ors.at/out/u/orf1/qxb/manifest_6.m3u8?m=1552488594'
+		INDEX_PREFIX='manifest_6_'
+		SIMPLE=1
+		SEGMENT_TIME=5
+		;;
+
 	orf2)
 		MAIN_PLAYLIST_URL='https://orf2.cdn.ors.at/out/u/orf2/qxb/manifest_6.m3u8?m=1552488594'
 		INDEX_PREFIX='manifest_6_'
