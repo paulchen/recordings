@@ -20,21 +20,21 @@ case "$1" in
 		;;
 
 	zdf)
-		MAIN_PLAYLIST_URL='https://zdf1314-lh.akamaihd.net/i/de14_v1@392878/master.m3u8?set-segment-duration=quality'
+		MAIN_PLAYLIST_URL='https://zdf-hls-01.akamaized.net/hls/live/2002460/de/high/master.m3u8'
 		RESOLUTION='1280x720'
-		INDEX_PREFIX='segment'
+		INDEX_PREFIX=''
 		;;
 
 	zdfneo)
-		MAIN_PLAYLIST_URL='https://zdf1314-lh.akamaihd.net/i/de13_v1@392877/master.m3u8?set-segment-duration=quality'
+		MAIN_PLAYLIST_URL='https://zdf-hls-02.akamaized.net/hls/live/2002461/de/high/master.m3u8'
 		RESOLUTION='1280x720'
-		INDEX_PREFIX='segment'
+		INDEX_PREFIX=''
 		;;
 
 	3sat)
-		MAIN_PLAYLIST_URL='http://zdf0910-lh.akamaihd.net/i/dach10_v1@392872/master.m3u8?set-segment-duration=quality'
+		MAIN_PLAYLIST_URL='https://zdfhls18-i.akamaihd.net/hls/live/744751/dach/high/master.m3u8'
 		RESOLUTION='852x480'
-		INDEX_PREFIX='segment'
+		INDEX_PREFIX=''
 		;;
 
 	orf1)
@@ -70,7 +70,7 @@ LOCKFILE="/tmp/recording_$1.lock"
 (
 flock -xn 200 || exit
 
-echo $LOCKFILE
+echo "Lock file: $LOCKFILE" >> $LOGFILE
 
 LOGFILE=download.log
 
@@ -82,6 +82,7 @@ while [ "`date +%s`" -lt "$END" ]; do
 	start_time=`date +%s`
 
 	if [ "$SIMPLE" == "0" ]; then
+		echo "Downloading: $MAIN_PLAYLIST_URL" >> $LOGFILE
 		MAIN_PLAYLIST=`wget "$MAIN_PLAYLIST_URL" -q -O -|grep -A 1 "$RESOLUTION"|head -n 2|tail -n 1`
 
 		if [ `echo "$MAIN_PLAYLIST" | grep -c '^http'` -eq "0" ]; then
@@ -91,7 +92,7 @@ while [ "`date +%s`" -lt "$END" ]; do
 	else
 		MAIN_PLAYLIST="$MAIN_PLAYLIST_URL"
 	fi
-#	echo $MAIN_PLAYLIST
+	echo "Downloading: $MAIN_PLAYLIST" >> $LOGFILE
 	URLS=`wget "$MAIN_PLAYLIST" -q -O -|grep '\.ts'`
 
 	first=1
@@ -131,6 +132,7 @@ while [ "`date +%s`" -lt "$END" ]; do
 	
 		for i in 1 2 3 4 5; do
 			echo -n `date` Downloading segment "$INDEX"... >> $LOGFILE
+			echo "Downloading: $URL" >> $LOGFILE
 			wget -nc "$URL" -q -O "segment${INDEX}.ts"
 			if [ $? -eq 0 ]; then
 				downloaded=$((downloaded+1))
