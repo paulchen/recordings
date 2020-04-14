@@ -38,24 +38,24 @@ case "$1" in
 		;;
 
 	orf1)
-		MAIN_PLAYLIST_URL='https://orf1.mdn.ors.at/out/u/orf1/qxb/manifest_6.m3u8?m=1552488594'
-		INDEX_PREFIX='manifest_6_'
+		MAIN_PLAYLIST_URL='https://orf1.mdn.ors.at/out/u/orf1/qxb/manifest_4.m3u8?m=1552488594'
+		INDEX_PREFIX='manifest_4_'
 		SIMPLE=1
-		SEGMENT_TIME=5
+		SEGMENT_TIME=4
 		;;
 
 	orf2)
-		MAIN_PLAYLIST_URL='https://orf2.mdn.ors.at/out/u/orf2/qxb/manifest_6.m3u8?m=1552488594'
-		INDEX_PREFIX='manifest_6_'
+		MAIN_PLAYLIST_URL='https://orf2.mdn.ors.at/out/u/orf2/qxb/manifest_4.m3u8?m=1552488594'
+		INDEX_PREFIX='manifest_4_'
 		SIMPLE=1
-		SEGMENT_TIME=5
+		SEGMENT_TIME=4
 		;;
 
 	orf3)
-		MAIN_PLAYLIST_URL='https://orf3.mdn.ors.at/out/u/orf3/qxb/manifest_6.m3u8?m=1552488594'
-		INDEX_PREFIX='manifest_6_'
+		MAIN_PLAYLIST_URL='https://orf3.mdn.ors.at/out/u/orf3/qxb/manifest_4.m3u8?m=1552488594'
+		INDEX_PREFIX='manifest_4_'
 		SIMPLE=1
-		SEGMENT_TIME=5
+		SEGMENT_TIME=4
 		;;
 
 	*)
