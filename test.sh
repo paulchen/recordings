@@ -15,7 +15,6 @@ rm -rf test
 mkdir test
 cd test
 
-ERRORS=0
 for STATION in `cat ../stations`; do
 	echo "Testing station $STATION..."
 
@@ -23,6 +22,21 @@ for STATION in `cat ../stations`; do
 
 	NOW=`date +%s`
 	THEN=$((NOW+30))
+
+	current_failures=0
+	if [ -e "../failed_stations/$STATION" ]; then
+		current_failures=`cat "../failed_stations/$STATION"`
+
+		if [ "$current_failures" -eq "0" ]; then
+			DONT_CHECK=0
+			/opt/icinga-plugins/check_fileage.py -f "../failed_stations/$STATION" -w 1400 -c 2800 > /dev/null 2>&1 && DONT_CHECK=1
+			if [ "$DONT_CHECK" -eq "1" ]; then
+				echo "Not checking station, last success was less than 24h ago" 
+				continue
+			fi
+		fi
+	fi
+	echo "Current failures: $current_failures"
 
 	station_error=0
 	../download.sh "$STATION" "$THEN" || station_error=1
@@ -40,8 +54,12 @@ for STATION in `cat ../stations`; do
 
 	if [ "$station_error" -eq "1" ]; then
 		echo "Error while downloading $STATION"
-		ERRORS=$((ERRORS+1))
+		current_failures=$((current_failures+1))
+	else
+		echo "Test successful"
+		current_failures=0
 	fi
+	echo "$current_failures" > "../failed_stations/$STATION"
 
 	rm -f all.mp4 download.log
 done
@@ -49,8 +67,4 @@ done
 cd ..
 rm -rf test
 
-echo $ERRORS > failed_stations
-
-echo "Failed stations: $ERRORS"
-exit $ERRORS
 

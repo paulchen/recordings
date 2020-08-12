@@ -5,16 +5,22 @@ HOME=`pwd`
 
 . config
 
-if [ ! -e failed_stations ]; then
-	echo "File failed_stations does not exist, please run test.sh"
+if [ ! -e stations ]; then
+	echo "File stations does not exist, please copy stations.dist to stations and edit accordingly"
 	exit 2
 fi
+for STATION in `cat stations`; do
+	if [ ! -e "failed_stations/$STATION" ]; then
+		echo "File failed_stations/$STATION does not exist, please run test.sh"
+		exit 2
+	fi
 
-FAILED_STATIONS=`cat failed_stations`
-if [ "$FAILED_STATIONS" != "0" ]; then
-	echo "Number of failed stations: $FAILED_STATIONS"
-	exit 2
-fi
+	failures=`cat "failed_stations/$STATION"`
+	if [ "$failures" -gt "24" ]; then
+		echo "Failed station: $STATION"
+		exit 2
+	fi
+done
 
 COUNT=`echo 'SELECT COUNT(*) FROM recording WHERE start_date >= end_date;'|mysql --silent -u recordings -p$DB_PASSWORD recordings`
 
