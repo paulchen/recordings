@@ -20,7 +20,8 @@ case "$1" in
 	orf1)     URL='https://orf1.mdn.ors.at/out/u/orf1/qxb/manifest.m3u8' ;;
 	orf2)     URL='https://orf2.mdn.ors.at/out/u/orf2/qxb/manifest.m3u8' ;;
 	orf3)     URL='https://orf3.mdn.ors.at/out/u/orf3/qxb/manifest.m3u8' ;;
-	rbb)      URL='https://mcdn.br.de/bfs_sued/de/master.m3u8' ;;
+	rbb)      URL='https://rbb-hls-berlin.akamaized.net/hls/live/2017824/rbb_berlin/master-720p-3628.m3u8' ;;
+	br)       URL='https://mcdn.br.de/br/fs/bfs_sued/hls/de/master.m3u8' ;;
 	mdr)      URL='https://mdrtvsnhls.akamaized.net/hls/live/2016928/mdrtvsn/master.m3u8' ;;
 	*)
 		# TODO extend by more stations
